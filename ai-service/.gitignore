@@ -1,0 +1,15 @@
+# Environment variables & API keys
+.env
+.env.*
+*.env
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Uploads & Data
+uploads/
+*.log

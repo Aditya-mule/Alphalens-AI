@@ -1,0 +1,16 @@
+# Environment variables
+.env
+.env.*
+*.env
+
+# Dependencies
+node_modules/
+
+# TypeScript Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Uploads & Logs
+uploads/
+*.log

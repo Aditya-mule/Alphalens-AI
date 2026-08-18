@@ -1,0 +1,119 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  FREE_USER
+  PREMIUM_USER
+  ADMIN
+}
+
+enum DocStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id           String      @id @default(uuid())
+  email        String      @unique
+  passwordHash String
+  role         Role        @default(FREE_USER)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  profile      Profile?
+  portfolios   Portfolio[]
+  watchlists   Watchlist[]
+}
+
+model Profile {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName         String?
+  preferredSectors String[] @default([])
+  riskTolerance    String   @default("MODERATE") // CONSERVATIVE, MODERATE, AGGRESSIVE
+}
+
+model Portfolio {
+  id           String        @id @default(uuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Transaction {
+  id              String    @id @default(uuid())
+  portfolioId     String
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  ticker          String    // e.g. MSFT
+  quantity        Int
+  purchasePrice   Float
+  transactionDate DateTime  @default(now())
+}
+
+model Watchlist {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ticker    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, ticker])
+}
+
+model Document {
+  id               String    @id @default(uuid())
+  companyTicker    String
+  filename         String
+  status           DocStatus @default(PENDING)
+  size             Int
+  qdrantCollection String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model News {
+  id             String   @id @default(uuid())
+  title          String
+  url            String   @unique
+  summary        String?
+  sentimentScore Float?
+  companyTicker  String
+  publishedAt    DateTime
+  createdAt      DateTime @default(now())
+}
+
+model Company {
+  ticker           String   @id
+  name             String
+  sector           String
+  industry         String
+  price            Float    @default(0.0)
+  revenue          Float    @default(0.0)
+  revenueGrowthYoY Float    @default(0.0)
+  netIncome        Float    @default(0.0)
+  operatingMargin  Float    @default(0.0)
+  roe              Float    @default(0.0)
+  roce             Float    @default(0.0)
+  debtToEquity     Float    @default(0.0)
+  peRatio          Float    @default(0.0)
+  pbRatio          Float    @default(0.0)
+  dividendYield    Float    @default(0.0)
+  marketCap        Float    @default(0.0)
+  updatedAt        DateTime @updatedAt
+
+  @@index([sector])
+  @@index([marketCap])
+  @@index([roce])
+  @@index([peRatio])
+}
