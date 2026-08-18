@@ -8,9 +8,12 @@ import logger from '../config/logger.js';
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+const isTLS = redisUrl.startsWith('rediss://');
 
 const connection = new IORedis(redisUrl, {
   maxRetriesPerRequest: null,
+  enableReadyCheck: false,
+  ...(isTLS ? { tls: { rejectUnauthorized: false } } : {}),
 });
 
 export const documentWorker = new Worker(

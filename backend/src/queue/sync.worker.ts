@@ -4,7 +4,13 @@ import logger from '../config/logger.js';
 import prisma from '../config/prisma.js';
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-const connection = new IORedis(redisUrl, { maxRetriesPerRequest: null });
+const isTLS = redisUrl.startsWith('rediss://');
+
+const connection = new IORedis(redisUrl, { 
+  maxRetriesPerRequest: null,
+  enableReadyCheck: false,
+  ...(isTLS ? { tls: { rejectUnauthorized: false } } : {}),
+});
 
 export const syncWorker = new Worker(
   'market-sync',
