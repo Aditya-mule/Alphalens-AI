@@ -255,4 +255,9 @@ def compare_companies(payload: ComparisonPayload):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Comparison service error: {str(e)}"
         )
-
+@app.get("/")
+def root():
+    return {
+        "service": "AlphaLens AI Service",
+        "status": "running"
+    }
