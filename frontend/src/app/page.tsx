@@ -18,8 +18,8 @@ import {
   Loader2
 } from "lucide-react";
 
-// API Gateway base URL
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api`;
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = API_BASE.endsWith("/api") ? API_BASE : `${API_BASE}/api`;
 
 interface StockInfo {
   ticker: string;
