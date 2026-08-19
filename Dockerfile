@@ -1,13 +1,17 @@
-FROM python:3.11-slim
+FROM node:20-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY backend/package*.json ./
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN npm ci
 
-COPY . .
+COPY backend/ .
 
-ENV PORT=8080
+RUN npx prisma generate
 
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port $PORT"]
+RUN npm run build
+
+ENV NODE_ENV=production
+
+CMD ["npm", "start"]
