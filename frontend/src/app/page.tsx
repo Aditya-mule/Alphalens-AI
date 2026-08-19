@@ -18,7 +18,7 @@ import {
   Loader2
 } from "lucide-react";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://alphalens-ai-service-446073417945.asia-south1.run.app";
 const API_URL = API_BASE.endsWith("/api") ? API_BASE : `${API_BASE}/api`;
 
 interface StockInfo {
