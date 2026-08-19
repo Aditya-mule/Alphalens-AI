@@ -70,20 +70,54 @@ export class NewsService {
 
   private getMockNewsFeed(ticker: string) {
     const now = new Date();
-    return [
-      {
-        title: `${ticker} announces expansion of its green energy operations`,
-        url: `https://www.livemint.com/industry/${ticker.toLowerCase()}-green-expansion-${Date.now()}`,
-        content: `${ticker} declared a fresh investment of ₹10,000 crores into its clean-tech and carbon-neutral utilities, aiming to accelerate production over the next fiscal cycle.`,
-        publishedAt: new Date(now.getTime() - 2 * 60 * 60 * 1000), // 2 hours ago
-      },
-      {
-        title: `Analysts bullish on ${ticker} following latest quarterly audit results`,
-        url: `https://www.moneycontrol.com/news/business/stocks/${ticker.toLowerCase()}-analyst-review-${Date.now()}`,
-        content: `Leading brokerage firms upgraded the target price of ${ticker} following positive operating efficiency reports, highlighting strong ROCE margins and lower corporate leverage.`,
-        publishedAt: new Date(now.getTime() - 12 * 60 * 60 * 1000), // 12 hours ago
-      }
-    ];
+    const sym = ticker.toUpperCase().replace('.NS', '').replace('.BO', '');
+
+    if (['KPITTECH', 'TCS', 'INFY', 'WIPRO', 'HCLTECH', 'TECHM', 'LTIM'].includes(sym)) {
+      return [
+        {
+          title: `${sym} secures multi-million dollar cloud & AI transformation contract`,
+          url: `https://www.livemint.com/market/${sym.toLowerCase()}-cloud-contract-${Date.now()}`,
+          content: `${sym} announced a strategic partnership with global enterprise leaders to scale AI integration and cloud infrastructure, driving operating revenue growth.`,
+          publishedAt: new Date(now.getTime() - 2 * 60 * 60 * 1000),
+        },
+        {
+          title: `Brokerages issue Buy rating on ${sym} following strong quarterly operating performance`,
+          url: `https://www.moneycontrol.com/news/business/stocks/${sym.toLowerCase()}-rating-${Date.now()}`,
+          content: `Analyst reports highlight robust EBIT margins and strong digital deal momentum for ${sym}, reaffirming positive long-term return on capital.`,
+          publishedAt: new Date(now.getTime() - 10 * 60 * 60 * 1000),
+        }
+      ];
+    } else if (['HDFCBANK', 'ICICIBANK', 'SBIN', 'AXISBANK', 'KOTAKBANK'].includes(sym)) {
+      return [
+        {
+          title: `${sym} reports healthy credit expansion and stable Net Interest Margins`,
+          url: `https://www.livemint.com/banking/${sym.toLowerCase()}-credit-growth-${Date.now()}`,
+          content: `${sym} registered double-digit loan book expansion with pristine asset quality and improving Net NPA figures across retail and corporate banking segments.`,
+          publishedAt: new Date(now.getTime() - 3 * 60 * 60 * 1000),
+        },
+        {
+          title: `Institutional investors increase stake in ${sym} amidst favorable banking outlook`,
+          url: `https://www.moneycontrol.com/news/business/${sym.toLowerCase()}-institutional-stake-${Date.now()}`,
+          content: `Foreign and domestic institutional investors expanded holdings in ${sym}, citing robust return on equity (ROE) and capital adequacy ratios.`,
+          publishedAt: new Date(now.getTime() - 14 * 60 * 60 * 1000),
+        }
+      ];
+    } else {
+      return [
+        {
+          title: `${sym} reports resilient quarterly performance and steady operational expansion`,
+          url: `https://www.livemint.com/companies/${sym.toLowerCase()}-quarterly-performance-${Date.now()}`,
+          content: `${sym} announced steady top-line growth driven by core market demand, maintaining healthy operating margins and disciplined capital allocation.`,
+          publishedAt: new Date(now.getTime() - 2 * 60 * 60 * 1000),
+        },
+        {
+          title: `Analysts highlight strong balance sheet health and ROCE metrics for ${sym}`,
+          url: `https://www.moneycontrol.com/news/business/stocks/${sym.toLowerCase()}-balance-sheet-${Date.now()}`,
+          content: `Market analysts noted ${sym}'s conservative leverage profile and sustained return metrics as key growth drivers for upcoming quarters.`,
+          publishedAt: new Date(now.getTime() - 12 * 60 * 60 * 1000),
+        }
+      ];
+    }
   }
 }
 
