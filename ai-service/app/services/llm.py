@@ -39,14 +39,16 @@ def generate_fundamental_analysis_llm(
         client = OpenAI(api_key=api_key)
         
         system_prompt = (
-            "You are a Senior Investment Research Analyst. Your job is to generate a comprehensive, structured "
-            "financial analysis report for the requested stock ticker, using the key financial metrics provided. "
-            "Your output MUST strictly comply with the requested JSON schema, containing analysis of growth, "
-            "profitability, capital efficiency, leverage/debt, peers, and a valuation summary."
+            f"You are a Senior Investment Research Analyst. Your task is to generate a comprehensive, structured "
+            f"financial analysis report ONLY for the requested company ticker '{ticker}'. "
+            f"Do NOT reference Reliance Industries, oil, or refining unless the requested ticker is explicitly RELIANCE. "
+            f"Your output MUST strictly comply with the requested JSON schema, analyzing growth, "
+            f"profitability, capital efficiency, leverage/debt, peers, and valuation."
         )
         
         user_message = (
-            f"Please analyze {ticker} with these latest financial parameters:\n"
+            f"Please analyze {ticker} with these verified financial parameters:\n"
+            f"- Ticker: {ticker}\n"
             f"- Revenue Growth (YoY): {revenue_growth_yoy}%\n"
             f"- Operating Margin: {profit_margin}%\n"
             f"- Return on Equity (ROE): {roe}%\n"

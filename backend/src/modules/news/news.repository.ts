@@ -42,6 +42,12 @@ export class NewsRepository {
       take: limit,
     });
   }
+
+  async deleteNewsByTicker(ticker: string) {
+    return prisma.news.deleteMany({
+      where: { companyTicker: ticker.toUpperCase() },
+    });
+  }
 }
 
 export default NewsRepository;

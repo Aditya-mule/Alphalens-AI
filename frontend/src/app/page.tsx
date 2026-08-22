@@ -124,6 +124,8 @@ export default function Home() {
   const [txTicker, setTxTicker] = useState("");
   const [txQty, setTxQty] = useState("");
   const [txPrice, setTxPrice] = useState("");
+  const [txSuggestions, setTxSuggestions] = useState<StockInfo[]>([]);
+  const [showTxSuggestions, setShowTxSuggestions] = useState(false);
 
   // PDF Upload State
   const [showUpload, setShowUpload] = useState(false);
@@ -205,6 +207,30 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, [searchQuery, token]);
+
+  // Handle Portfolio Add Holding Search Autocomplete
+  useEffect(() => {
+    if (!txTicker.trim() || !token) {
+      setTxSuggestions([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const response = await fetch(`${API_URL}/stocks/search?query=${encodeURIComponent(txTicker)}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setTxSuggestions(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [txTicker, token]);
 
   const fetchWatchlist = async () => {
     if (!token) return;
@@ -1143,27 +1169,37 @@ export default function Home() {
                       <div className="bg-slate-50/80 border border-slate-200/80 p-4 rounded-xl">
                         <h4 className="text-xs font-bold text-slate-800 uppercase font-mono mb-3">Add Ledger Transaction</h4>
                         <div className="grid grid-cols-3 gap-3">
-                          <input 
-                            type="text" 
-                            placeholder="Ticker"
-                            list="portfolio-tickers"
-                            value={txTicker}
-                            onChange={(e) => setTxTicker(e.target.value)}
-                            className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-purple-500 transition-colors"
-                          />
-                          <datalist id="portfolio-tickers">
-                            {watchlist.map((w) => (
-                              <option key={w.ticker} value={w.ticker}>{w.companyName}</option>
-                            ))}
-                            <option value="RELIANCE">Reliance Industries</option>
-                            <option value="TCS">Tata Consultancy Services</option>
-                            <option value="INFY">Infosys Limited</option>
-                            <option value="HDFCBANK">HDFC Bank</option>
-                            <option value="SUZLON">Suzlon Energy</option>
-                            <option value="ZOMATO">Zomato Limited</option>
-                            <option value="IREDA">IREDA Green Financing</option>
-                            <option value="TATAMOTORS">Tata Motors</option>
-                          </datalist>
+                          <div className="relative">
+                            <input 
+                              type="text" 
+                              placeholder="Search Ticker (e.g. KPITTECH, RVNL)"
+                              value={txTicker}
+                              onChange={(e) => { setTxTicker(e.target.value); setShowTxSuggestions(true); }}
+                              onFocus={() => { if (txSuggestions.length > 0) setShowTxSuggestions(true); }}
+                              className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-purple-500 transition-colors w-full font-mono font-semibold"
+                            />
+                            {showTxSuggestions && txSuggestions.length > 0 && (
+                              <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 max-h-48 overflow-y-auto divide-y divide-slate-100">
+                                {txSuggestions.map((s) => (
+                                  <div
+                                    key={s.ticker}
+                                    onClick={() => {
+                                      setTxTicker(s.ticker);
+                                      setTxPrice(s.price ? s.price.toString() : "");
+                                      setShowTxSuggestions(false);
+                                    }}
+                                    className="p-2.5 hover:bg-purple-50 cursor-pointer flex items-center justify-between text-xs transition-colors"
+                                  >
+                                    <div>
+                                      <div className="font-bold text-purple-900">{s.ticker}</div>
+                                      <div className="text-[10px] text-slate-500 truncate max-w-[140px]">{s.name}</div>
+                                    </div>
+                                    <span className="font-mono font-semibold text-slate-800">₹{s.price}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                           <input 
                             type="number" 
                             placeholder="Quantity"

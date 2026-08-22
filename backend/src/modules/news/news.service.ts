@@ -18,7 +18,18 @@ export class NewsService {
     // 1. Fetch existing articles from DB
     let articles = await this.newsRepository.findNewsByTicker(uppercaseTicker);
     
-    // 2. If no articles exist, seed mock Indian financial news and trigger AI enrichment
+    // Purge outdated Reliance mock template articles if ticker is not Reliance
+    const cleanSym = uppercaseTicker.replace('.NS', '').replace('.BO', '');
+    if (cleanSym !== 'RELIANCE') {
+      const corrupted = articles.filter(a => a.title.includes('RELIANCE') || a.summary?.includes('RELIANCE'));
+      if (corrupted.length > 0) {
+        logger.info(`Purging ${corrupted.length} corrupted Reliance articles for ticker: ${uppercaseTicker}`);
+        await this.newsRepository.deleteNewsByTicker(uppercaseTicker);
+        articles = [];
+      }
+    }
+    
+    // 2. If no articles exist, seed company & sector specific news feed
     if (articles.length === 0) {
       logger.info(`No local news found for ${uppercaseTicker}. Seeding mock news feed.`);
       const mockFeeds = this.getMockNewsFeed(uppercaseTicker);
