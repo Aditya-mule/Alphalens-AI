@@ -154,11 +154,11 @@ Create `backend/.env` with the following variables:
 ```env
 PORT=5000
 NODE_ENV=development
-DATABASE_URL="postgresql://neondb_owner:npg_0ApJTuXry7vi@ep-shiny-haze-aya7j035.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require"
-REDIS_URL="rediss://default:YOUR_UPSTASH_PASSWORD@helping-bluegill-144303.upstash.io:6379"
+DATABASE_URL="postgresql://user:password@your-neon-db-host.neon.tech/neondb?sslmode=require"
+REDIS_URL="rediss://default:YOUR_UPSTASH_PASSWORD@your-upstash-redis-host.upstash.io:6379"
 AI_SERVICE_URL="http://localhost:8001"
-JWT_SECRET="super-secret-alphalens-jwt-key"
-JWT_REFRESH_SECRET="super-secret-alphalens-refresh-key"
+JWT_SECRET="your-jwt-secret-key"
+JWT_REFRESH_SECRET="your-jwt-refresh-secret-key"
 JWT_EXPIRES_IN="15m"
 JWT_REFRESH_EXPIRES_IN="7d"
 ```
@@ -168,8 +168,8 @@ Create `ai-service/.env` with:
 ```env
 PORT=8001
 ENVIRONMENT=development
-OPENAI_API_KEY="sk-proj-YOUR_OPENAI_KEY"
-QDRANT_URL="https://be4346db-608f-4187-88ba-0f99f9563618.us-east-2-0.aws.cloud.qdrant.io"
+OPENAI_API_KEY="sk-proj-YOUR_OPENAI_API_KEY"
+QDRANT_URL="https://your-qdrant-cluster-url.qdrant.tech"
 QDRANT_API_KEY="your-qdrant-api-key"
 ```
 
