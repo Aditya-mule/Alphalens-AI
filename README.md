@@ -145,38 +145,9 @@ Ensure the following are installed locally:
 - **Python**: `v3.10` or higher
 - **Docker Desktop**: For running local Postgres, Redis, and Qdrant containers
 
----
 
-### 2. Environment Configuration
-
-#### A. Backend (`backend/.env`)
-Create `backend/.env` with the following variables:
-```env
-PORT=5000
-NODE_ENV=development
-DATABASE_URL="postgresql://user:password@your-neon-db-host.neon.tech/neondb?sslmode=require"
-REDIS_URL="rediss://default:YOUR_UPSTASH_PASSWORD@your-upstash-redis-host.upstash.io:6379"
-AI_SERVICE_URL="http://localhost:8001"
-JWT_SECRET="your-jwt-secret-key"
-JWT_REFRESH_SECRET="your-jwt-refresh-secret-key"
-JWT_EXPIRES_IN="15m"
-JWT_REFRESH_EXPIRES_IN="7d"
 ```
 
-#### B. AI Microservice (`ai-service/.env`)
-Create `ai-service/.env` with:
-```env
-PORT=8001
-ENVIRONMENT=development
-OPENAI_API_KEY="sk-proj-YOUR_OPENAI_API_KEY"
-QDRANT_URL="https://your-qdrant-cluster-url.qdrant.tech"
-QDRANT_API_KEY="your-qdrant-api-key"
-```
-
-#### C. Frontend (`frontend/.env.local`)
-Create `frontend/.env.local` with:
-```env
-NEXT_PUBLIC_API_URL="http://localhost:5000"
 ```
 
 ---
